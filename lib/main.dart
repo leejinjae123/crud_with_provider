@@ -27,15 +27,13 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// 버킷 클래스
 class Bucket {
-  String job; // 할 일
-  bool isDone; // 완료 여부
+  String job;
+  bool isDone;
 
-  Bucket(this.job, this.isDone); // 생성자
+  Bucket(this.job, this.isDone);
 }
 
-/// 홈 페이지
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -50,11 +48,10 @@ class HomePage extends StatelessWidget {
         body: bucketList.isEmpty
             ? Center(child: Text("내용을 작성해주세요"))
             : ListView.builder(
-                itemCount: bucketList.length, // bucketList 개수 만큼 보여주기
+                itemCount: bucketList.length,
                 itemBuilder: (context, index) {
-                  var bucket = bucketList[index]; // index에 해당하는 bucket 가져오기
+                  var bucket = bucketList[index];
                   return ListTile(
-                    // 버킷 리스트 할 일
                     title: Text(
                       bucket.job,
                       style: TextStyle(
@@ -65,16 +62,13 @@ class HomePage extends StatelessWidget {
                             : TextDecoration.none,
                       ),
                     ),
-                    // 삭제 아이콘 버튼
                     trailing: IconButton(
                       icon: Icon(CupertinoIcons.delete),
                       onPressed: () {
-                        // 삭제 버튼 클릭시
                         bucketService.deleteBucket(index);
                       },
                     ),
                     onTap: () {
-                      // 아이템 클릭시
                       bucket.isDone = !bucket.isDone;
                       bucketService.updateBucket(bucket, index);
                     },
@@ -84,7 +78,6 @@ class HomePage extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
-            // + 버튼 클릭시 버킷 생성 페이지로 이동
             Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => CreatePage()),
@@ -96,7 +89,6 @@ class HomePage extends StatelessWidget {
   }
 }
 
-/// 버킷 생성 페이지
 class CreatePage extends StatefulWidget {
   const CreatePage({Key? key}) : super(key: key);
 
@@ -105,10 +97,8 @@ class CreatePage extends StatefulWidget {
 }
 
 class _CreatePageState extends State<CreatePage> {
-  // TextField의 값을 가져올 때 사용합니다.
   TextEditingController textController = TextEditingController();
 
-  // 경고 메세지
   String? error;
 
   @override
@@ -116,7 +106,6 @@ class _CreatePageState extends State<CreatePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("작성"),
-        // 뒤로가기 버튼
         leading: IconButton(
           icon: Icon(CupertinoIcons.chevron_back),
           onPressed: () {
@@ -128,7 +117,6 @@ class _CreatePageState extends State<CreatePage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // 텍스트 입력창
             TextField(
               controller: textController,
               autofocus: true,
@@ -138,7 +126,6 @@ class _CreatePageState extends State<CreatePage> {
               ),
             ),
             SizedBox(height: 32),
-            // 추가하기 버튼
             SizedBox(
               width: double.infinity,
               height: 48,
@@ -150,22 +137,20 @@ class _CreatePageState extends State<CreatePage> {
                   ),
                 ),
                 onPressed: () {
-                  // 추가하기 버튼 클릭시
                   String job = textController.text;
                   if (job.isEmpty) {
                     setState(() {
-                      error = "내용을 입력해주세요."; // 내용이 없는 경우 에러 메세지
+                      error = "내용을 입력해주세요.";
                     });
                   } else {
                     setState(() {
-                      error = null; // 내용이 있는 경우 에러 메세지 숨기기
+                      error = null; //
                     });
 
-                    // BucketService 가져오기
                     BucketService bucketService = context.read<BucketService>();
                     bucketService.createBucket(job);
 
-                    Navigator.pop(context); // 화면을 종료합니다.
+                    Navigator.pop(context);
                   }
                 },
               ),
